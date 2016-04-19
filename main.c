@@ -6,7 +6,7 @@
 /*   By: abureau <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/04/12 14:52:58 by abureau           #+#    #+#             */
-/*   Updated: 2016/04/19 10:28:35 by abureau          ###   ########.fr       */
+/*   Updated: 2016/04/19 17:43:51 by abureau          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include "fdf.h"
-
+#include <fcntl.h>
 
 //static int mlx_mouse_hook(void *win, int, )
 /*typedef struct void* mlxparam{
@@ -102,6 +102,7 @@ int my_key_func(int keycode, void *param)
 	{
 			mlx_pixel_put(p->mlx, p->win, i, i, j+=1);
 	}
+
 	//	printf("coucou");
 	//	mlx_pixel_put(mlx_ptr, win_ptr, i, i, 0x00FFFFFF);
 	return(0);
@@ -115,6 +116,16 @@ int main(void)
 	int				i = 0;
 	unsigned int	j;
 	t_params		p;
+	t_init			mycount;
+	int		**nbr;
+	int		*nbrr;
+	int		k;
+
+	k = -1;
+	nbr = (int**) malloc(sizeof(int*) * 10);
+	while (k++ < 10)
+	nbr[k] = (int*) malloc(sizeof(int) * 10);
+//	nbr = (int) ft_memalloc(sizeof(int));
 
 	j = 0;
 	p.mlx = mlx_init();
@@ -125,8 +136,11 @@ int main(void)
 	{
 			mlx_pixel_put(p.mlx, p.win, i, i, j+=0x00FF00);
 	}
-
-	mlx_mouse_hook(p.win, my_mouse_func, &p);
+	
+	int fd = open("/nfs/2015/a/abureau/fdfmap",O_RDONLY);
+	ft_putendl("before count_nbr");
+	mycount = count_nbr(fd);
+		mlx_mouse_hook(p.win, my_mouse_func, &p);
 	mlx_key_hook(p.win, my_key_func, &p);
 	mlx_loop(p.mlx);
 	return(0);
