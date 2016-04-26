@@ -1,42 +1,46 @@
-#*****************************************************************************#
+#******************************************************************************#
 #                                                                              #
 #                                                         :::      ::::::::    #
 #    Makefile                                           :+:      :+:    :+:    #
 #                                                     +:+ +:+         +:+      #
 #    By: abureau <marvin@42.fr>                     +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
-#    Created: 2015/12/04 12:47:45 by abureau           #+#    #+#              #
-#    Updated: 2016/04/19 11:35:48 by abureau          ###   ########.fr        #
+#    Created: 2016/04/26 15:16:18 by abureau           #+#    #+#              #
+#    Updated: 2016/04/26 15:16:18 by abureau          ###   ########.fr        #
 #                                                                              #
 #******************************************************************************#
 
+NAME = test_fdf
 
-
-NAME = pls
-
-DIRSRC = ./includes/ \
-		 ./src/
-
-SRC = ./main.c \
-	  ./src/count_nbr.c
+SRC = ./src/get_number.c \
+	./src/main.c \
+	./src/get_next_line.c \
+	./src/initialize.c \
+	./src/divert.c
 
 CC = gcc
 
 OBJ = $(SRC:.c=.o)
 
-CFLAGS = -g
+CFLAGS = -g -Wall -Wextra
 
-all:$(NAME)
+all: LIBCOMPILE $(NAME)
 
 $(NAME): $(OBJ)
-	$(CC) -o $@ $^ GNL_NOFD/get_next_line.o -L/usr/local/lib/ -I/usr/local/include -I GNL_NOFD/libft/includes -L GNL_NOFD/libft/ -lft -lmlx -framework OpenGL -framework AppKit
+	$(CC) -o $@ $^ -I libft/includes -L libft/ -lft -L/usr/local/lib/ -I/usr/local/include -lmlx -framework OpenGL -framework AppKit
+
+LIBCOMPILE:
+	 make -C libft/
 
 %.o: %.c
-	$(CC) $(CFLAGS) -I GNL_NOFD/libft/includes -o $@ -c $<
+	$(CC) $(CFLAGS) -I libft/includes -o $@ -c $<
 
-fclean:
-	rm -f pls
+clean:
+	rm -f $(OBJ)
+	 make -C libft/ clean
+
+fclean: clean
+	rm -f $(NAME)
+	 make -C libft/ fclean
 
 re: fclean all
-
-
