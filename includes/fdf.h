@@ -4,8 +4,8 @@
 # include "./get_next_line.h"
 # include "./get_number.h"
 
-# define WIDTH 100
-# define HEIGHT 100
+# define WIDTH 500
+# define HEIGHT 500
 # define WIN_N "42 FDF map"
 
 typedef struct s_lol
@@ -31,10 +31,10 @@ typedef struct s_init
 	void	*win;
 
 	int		nbpic;
-	void	**mypic;
+	void	*mypic;
 }t_init;
 
-void		Init_Fdf(const char *str, t_init t_init_mlx);
+void		init_Fdf(const char *str, t_init t_init_mlx);
 void		printsquare(t_params *p, int fill);
 int			my_mouse_func(int button, int x, int y, void *param);
 int			my_key_func(int keycode, void *param);

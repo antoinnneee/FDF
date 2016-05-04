@@ -6,7 +6,7 @@
 /*   By: abureau <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/04/12 14:52:58 by abureau           #+#    #+#             */
-/*   Updated: 2016/04/26 15:52:33 by abureau          ###   ########.fr       */
+/*   Updated: 2016/05/02 11:57:29 by abureau          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -83,10 +83,7 @@ int my_key_func(int keycode, void *param)
 int main(int a, char **b)
 {
 	t_init	p;
-	Init_fdf(b[1], &p);
-	mlx_mouse_hook(p.win, my_mouse_func, &p);
-	mlx_key_hook(p.win, my_key_func, &p);
-	mlx_loop(p.mlx);
+	init_fdf(b[1], &p);
 	return(0);
 
 
