@@ -6,7 +6,7 @@
 /*   By: abureau <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/04/26 12:47:41 by abureau           #+#    #+#             */
-/*   Updated: 2016/05/02 15:33:06 by abureau          ###   ########.fr       */
+/*   Updated: 2016/05/18 17:56:26 by abureau          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,80 +17,9 @@
 #include "../includes/get_nbr.h"
 #include "../mlx/mlx.h"
 
+
+
 /*
-static int get_color_def(int p)
-{
-	double p_now;
-	
-	p_now = p;
-	if (p_now == 0)
-		return (COLORWHI);
-	else if (p_now <= 20)
-		return (COLORWHI - (((unsigned int)(((p_now - 0.) * 100. / 20.) * 0XFF / 100.) << 16) + ((unsigned int)(((p_now - 0.) * 100. / 20.) * (0XFF/ 100.)) << 8 )));
-	else if (p_now <= 40)
-		return (COLORBLU + ((unsigned int)(((p_now - 20.) * 100. / 20.) *  0XFF / 100.) << 8));
-	else if (p_now <= 60)
-		return (COLORCYA - ((p_now - 40.) * 100. / 20.) * ((0XFF)/ 100.));
-	else if (p_now <= 80)
-		return (COLORGRE + ((unsigned int)(((p_now - 60.) * 100. / 20.) * 0XFF / 100.) << 16));
-	else
-		return (COLORYEL - ((unsigned int)(((p_now - 80.) * 100. / 20. ) * 0XFF / 100.)) << 8);
-
-}
-
-static int get_color(t_init *t__mlx, int per , int value, int next)
-{
-	double p_start;
-	double p_now;
-	double p_end;
-
-	if (value == next)
-	{
-		//		per = 100;
-		p_start = (value - t__mlx->LOW_RANGE) * 100 / t__mlx->RANGE;
-		p_now = p_start;
-		per = p_start;
-		ft_putendl(" ====== new color ====");
-		ft_putstrnb("value : " , value);
-		ft_putstrnb("range : ", t__mlx->RANGE);
-		ft_putstrnb("percentage : ", per);
-		ft_putstrnb("next :", next);
-		ft_putstrnb("p_now : " , p_now);
-		ft_putstrnb("p_start :", p_start);
-		ft_putstrnb("p_end :", p_end);
-	}
-	else
-	{
-		p_start = (value - t__mlx->LOW_RANGE) * 100 / t__mlx->RANGE;
-		p_end = (next - t__mlx->LOW_RANGE) * 100 / t__mlx->RANGE;
-		p_now = p_start + (per * ((p_end - p_start) / 100));
-		ft_putendl(" ====== new color ====");
-		ft_putstrnb("value : " , value);
-		ft_putstrnb("range : ", t__mlx->RANGE);
-		ft_putstrnb("percentage : ", per);
-		ft_putstrnb("next :", next);
-		ft_putstrnb("p_now : " , p_now);
-		ft_putstrnb("p_start :", p_start);
-		ft_putstrnb("p_end :", p_end);
-		//return (COLORBLU);
-	}
-	if (p_now < 0)
-		p_now = p_now;
-	if (p_now == 0)
-		return (COLORWHI);
-	else if (p_now <= 20)
-		return (COLORWHI - (((unsigned int)(((p_now - 0.) * 100. / 20.) * (0XFF / 100.)) << 16) + ((unsigned int)(((p_now - 0.) * 100. / 20.) * (0XFF/ 100.)) << 8 )));
-	else if (p_now <= 40)
-		return (COLORBLU + ((unsigned int)(((p_now - 20.) * 100. / 20.) * ( 0XFF / 100.)) << 8));
-	else if (p_now <= 60)
-		return (COLORCYA - ((p_now - 40.) * 100. / 20.) * ((COLORBLU)/ 100.));
-	else if (p_now <= 80)
-		return (COLORGRE + ((unsigned int)(((p_now - 60.) * 100. / 20.) * 256 / 100.) << 16));
-	else
-		return (COLORYEL - ((unsigned int)(((p_now - 80.) * 100. / 20. ) * (256 )/ 100.)) << 8);
-
-}
-
 
 static int get_colorD(t_init *t__mlx, int per , int line, int cursor)
 {
@@ -306,6 +235,7 @@ static void fullcolor(t_init t__mlx)
 	;	
 	
 }
+*/
 
 static void	definition(t_init *t__mlx)
 {
@@ -341,9 +271,7 @@ static void	creat_window(t_init *t_init_mlx)
 {
 	t_init_mlx->win = mlx_new_window(t_init_mlx->mlx, WIDTH, HEIGHT, WIN_N);
 	tryalloc(t_init_mlx->win);
-	t_init_mlx->mypic = mlx_new_image(t_init_mlx->mlx, WIDTH, HEIGHT);
-	tryalloc(t_init_mlx->mypic);
-	dot_printing(t_init_mlx);
+//	dot_printing(t_init_mlx);
 	//	line(t_init_mlx);
 
 //	lineR(t_init_mlx);
@@ -353,7 +281,6 @@ static void	creat_window(t_init *t_init_mlx)
 //	fullcolor(t_init_mlx);
 }
 
-*/
 static int	*get_range(t_coord *nbr)
 {
 	int	*rangen;
@@ -368,7 +295,7 @@ static int	*get_range(t_coord *nbr)
 	while (cursorx != NULL)
 	{
 		tmp = cursorx;
-		while (tmp->nexty != NULL)
+		while (tmp != NULL)
 		{
 			if (tmp->z < LOW_RANGE)
 				LOW_RANGE = tmp->z;
@@ -379,9 +306,6 @@ static int	*get_range(t_coord *nbr)
 		cursorx = cursorx->nextx;
 	}
 	RANGE = MAX_RANGE - LOW_RANGE;
-	ft_putstrnb("MAX RANGE	: ", MAX_RANGE);
-	ft_putstrnb("RANGE	: ", RANGE);
-	ft_putstrnb("LOW RANGE	: ", LOW_RANGE);
 	return (rangen);
 }
 
@@ -390,7 +314,7 @@ static int	*get_range(t_coord *nbr)
 static void	explore(t_coord *begin)
 {
 	t_coord	*tmp;
-	t_coord *cursorx;
+	t_coord	*cursorx;
 	tmp = begin;
 	cursorx = begin;
 	while (cursorx != NULL)
@@ -405,14 +329,12 @@ static void	explore(t_coord *begin)
 		ft_putstrnb("next x -> value of x : ", cursorx->x);
 		cursorx = cursorx->nextx;
 	}
-
 }
 
 void		init_fdf(const char *str, t_init *t_init_mlx)
 {
 	t_coord		*numberarray;
-	t_map		*number_map;
-	int		fd;
+	int			fd;
 
 	fd = open(str, O_RDONLY);
 	ft_putendl("opening map ok");
@@ -440,8 +362,8 @@ void		init_fdf(const char *str, t_init *t_init_mlx)
 	t_init_mlx->rangen = get_range(numberarray);
 //	print_map_number(t_init_mlx->nbr_map);
 	t_init_mlx->mlx = mlx_init();
-//	creat_window(t_init_mlx);
+	creat_window(t_init_mlx);
 	mlx_mouse_hook(t_init_mlx->win, my_mouse_func, &t_init_mlx);
 	mlx_key_hook(t_init_mlx->win, my_key_func, &t_init_mlx);
 	mlx_loop(t_init_mlx->mlx);
-}
+	}
