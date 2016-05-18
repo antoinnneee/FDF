@@ -1,0 +1,42 @@
+#******************************************************************************#
+#                                                                              #
+#                                                         :::      ::::::::    #
+#    Makefile                                           :+:      :+:    :+:    #
+#                                                     +:+ +:+         +:+      #
+#    By: abureau <marvin@42.fr>                     +#+  +:+       +#+         #
+#                                                 +#+#+#+#+#+   +#+            #
+#    Created: 2016/05/10 19:26:16 by abureau           #+#    #+#              #
+#    Updated: 2016/05/10 19:26:16 by abureau          ###   ########.fr        #
+#                                                                              #
+#******************************************************************************#
+
+NAME = test
+
+CC = gcc
+
+OBJ = $(SRC:.c=.o)
+
+CFLAGS = 
+
+.ONESHELL:
+all: LIBCOMPILE $(NAME)
+
+$(NAME): $(OBJ)
+	$(CC) -o $@ $^ -I libft/includes -L libft/ -lft -L./mlx -lmlx -lXext -lX11 -lm -lbsd
+
+LIBCOMPILE:
+	make -C libft/
+	make -C mlx/ re
+
+%.o: %.c
+	$(CC) $(CFLAGS) -I libft/includes -I mlx/ -o $@ -c $<
+
+clean:
+	rm -f $(OBJ)
+	make -C libft/ clean
+
+fclean: clean
+	rm -f $(NAME)
+	make -C libft/ fclean
+
+re: fclean all
