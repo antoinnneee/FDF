@@ -12,6 +12,7 @@
 
 #include <string.h>
 #include "../includes/get_nbr.h"
+#include "../includes/fdf.h"
 
 static void		myrealloc(int **dim, int **buffer, int count)
 {
@@ -127,6 +128,33 @@ static t_coord	*link_elem(t_coord *begin)
 		elem = cursor;
 	}
 	return (begin);
+}
+
+void	freecoord(t_coord *begin)
+{
+	t_coord	*tmp;
+	t_coord	*cursorx;
+	t_coord *cursory;
+	
+	cursorx = begin;
+	while (cursorx != NULL)
+	{
+		tmp = cursorx;
+		while (tmp->nexty != NULL)
+		{
+			cursory = tmp;
+			tmp = tmp->nexty;
+			cursory->nextx = NULL;
+			cursorx->nexty = NULL;
+			free(cursory);
+		}
+		tmp->nextx = NULL;
+		tmp->nexty = NULL;
+		free(tmp);
+		cursorx = cursorx->nextx;
+	}
+	free(begin);
+	begin = NULL;
 }
 
 t_coord			*get_number(int fd)

@@ -98,6 +98,15 @@ int		ft_satoi(char *str)
 	return ((countsigne > 0) ? ft_atoi(&str[j - 1]) : ft_atoi(&str[j]));
 }
 
+int		percent(int low_range, int max_range, int value)
+{
+	float p;	
+	p = (float) ((value - low_range) * 100. / (max_range - low_range));
+
+	return (p);	
+
+}
+
 t_map	*get_struct_value(int **arraynbr)
 {
 	t_map	*nbrm;

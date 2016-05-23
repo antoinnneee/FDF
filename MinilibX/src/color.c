@@ -43,6 +43,30 @@ static int		color_chose(double p_now)
 	}
 }
 
+int		get_color(t_init *t__mlx, int per, int value, int next)
+{
+	double p_start;
+	double p_now;
+	double p_end;
+
+	if (value == next)
+	{
+		if (t__mlx->RANGE != 0)
+			p_start = (value - t__mlx->LOW_RANGE) * 100 / t__mlx->RANGE;
+		else
+			p_start = (value - t__mlx->LOW_RANGE) * 100 / 1;
+		p_now = p_start;
+		per = p_start;
+	}
+	else
+	{
+		p_start = (value - t__mlx->LOW_RANGE) * 100 / t__mlx->RANGE;
+		p_end = (next - t__mlx->LOW_RANGE) * 100 / t__mlx->RANGE;
+		p_now = p_start + (per * ((p_end - p_start) / 100));
+	}
+	return (color_chose(p_now));
+}
+
 int get_color_def(int p)
 {
 	double p_now;
@@ -50,7 +74,7 @@ int get_color_def(int p)
 	p_now = p;
 	return (color_chose(p_now));
 }
-
+/*
 int		get_color(t_init *t__mlx, int per, int value, int next)
 {
 	double p_start;
@@ -71,3 +95,4 @@ int		get_color(t_init *t__mlx, int per, int value, int next)
 	}
 	return (color_chose(p_now));
 }
+*/
