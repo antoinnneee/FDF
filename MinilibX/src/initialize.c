@@ -22,304 +22,8 @@
 #include <sys/wait.h>
 #include <stdlib.h>
 
-/*
 
-   static int get_colorD(t_init *t__mlx, int per , int line, int cursor)
-   {
-   int percent;
-   int value;
-
-   value = t__mlx->nbr_map->nbr_array[line + 1][cursor] - t__mlx->nbr_map->nbr_array[line][cursor];
-//	ft_putstrnb("col per   : ", per);
-ft_putstrnb("col value : " , value);
-if (value == 0)
-percent = (t__mlx->nbr_map->nbr_array[line][cursor] - t__mlx->LOW_RANGE) * 100 / t__mlx->RANGE;
-else
-percent = value * per / 100;
-ft_putstr("colonne =====NEWPIXEL=======\n");
-ft_putstrnb("colonne range : " , value);
-ft_putstrnb("colonne percent : " , percent);
-ft_putstrnb("colonne value : " , t__mlx->nbr_map->nbr_array[line][cursor]);
-ft_putstrnb("colonne per :", per);
-if (percent == 0)
-return (COLORWHI);
-else if (percent <= 24)
-return (COLORWHI - (percent * (0x00FF00FF )/ 100));
-else if (percent <= 49)
-return (COLORGRE - (percent * (0X00FF0000 )/ 100));
-else if (percent <= 74)
-return (COLORYEL - (percent * (0X00007500 )/ 100));
-else if (percent >= 98)
-return (COLORRED);
-else
-return (COLORORA - (percent * (0x00007500)/ 100));
-
-return (COLORGRE);
-}
- */
-
-/*
-   static void	line(t_init *t__mlx)
-   {
-   int		cursor;
-   int		line;
-   int		pix;
-   int		piy;
-   long long	color;
-   int		coeffdir[2];
-   int		ordo[2];
-   int		p;
-
-   line = 0;
-   cursor = 0;
-   while (line <= t__mlx->nbr_map->nb_dim - 2)
-   {
-   while (cursor < t__mlx->nbr_map->non[line])
-   {
-   pix = X1;
-   coeffdir[0] = ( Y2 - Y1 ) / (X2 - X1);
-   ordo[0] = Y1 - (coeffdir[0] * X1);
-   if (X3 - X1 == 0 && cursor < t__mlx->nbr_map->non[line])
-   {
-   piy = Y1;
-   while (piy != Y3)
-   {
-   p = (piy - Y1)* 100 / (Y3 - Y1);
-   color = get_colorD(t__mlx, p, line, cursor);
-   mlx_pixel_put(t__mlx->mlx, t__mlx->win, X1, piy, color);
-   piy = ( piy > Y3 ) ? piy - 1 : piy + 1;
-   }
-   }
-   else
-   {
-   piy = X1;
-   coeffdir[1] = ( Y3 - Y1 ) / (X3 - X1);
-   ordo[1] = Y1 - (coeffdir[1] * X1);
-   while (piy != X3)
-   {
-   p = ((pix - X1) * 100 / (X2 - X1));
-   color = get_colorD(t__mlx, p, line,cursor);
-   mlx_pixel_put(t__mlx->mlx, t__mlx->win, pix , (coeffdir[1] * pix) + ordo[1], color);
-   pix = ( pix > X2 ) ? pix - 1 : pix + 1;
-   }
-
-   }
-   while (pix != X2)
-   {
-   p = ((pix - X1) * 100 / (X2 - X1));
-   color = get_colorR(t__mlx, p, line,cursor);
-   mlx_pixel_put(t__mlx->mlx, t__mlx->win, pix , (coeffdir[0] * pix) + ordo[0], color);
-   pix = ( pix > X2 ) ? pix - 1 : pix + 1;
-   }
-
-   cursor++;
-   }
-   cursor = 0;
-   line ++;
-   }
-   }
- */
-/*
-   static void	lineR(t_init *t__mlx)
-   {
-   int	cursor;
-   int	line;
-   int	pix;
-   long long color;
-   line = 0;
-   cursor = 0;
-   int coeffdir = 0;
-   int ordo = 0;
-   int p;
-   while (line <= t__mlx->nbr_map->nb_dim - 1)
-   {
-   ft_putendl("new line");
-   while (cursor < t__mlx->nbr_map->non[line] - 1)
-   {
-   color = COLORWHI;
-   pix = X1;
-   coeffdir = ( Y2 - Y1 ) / (X2 - X1);
-   ordo = Y1 - (coeffdir * X1);
-   if (X2 != 0)
-   {
-   while (pix != X2)
-   {
-   if (pix > X2)
-   p = ((pix - X1) * 100 / (X2 - X1));
-   else
-   p = ((pix - X1) * 100 / (X2 - X1));
-   color = get_color(t__mlx, p, t__mlx->nbr_map->nbr_array[line][cursor], t__mlx->nbr_map->nbr_array[line][cursor + 1]);
-   mlx_pixel_put(t__mlx->mlx, t__mlx->win, pix , (coeffdir * pix) + ordo, color);
-   pix = ( pix > X2 ) ? pix - 1 : pix + 1;
-   }
-   cursor++;
-   }
-   }
-   cursor = 0;
-   line ++;
-   }
-   }
-
-
-   static void	lineD(t_init *t__mlx)
-   {
-   int			cursor;
-   int			line;
-   int			piy;
-   long long	color;
-   int			p;
-
-   line = 0;
-   cursor = 0;
-   while (line <= t__mlx->nbr_map->nb_dim - 2)
-   {
-   ft_putendl("new colonne");
-   while (cursor < t__mlx->nbr_map->non[line])
-   {
-   piy = Y1;
-   color = COLORRED;
-   if (Y3 != 0)
-   {
-   while (piy != Y3)
-   {
-   p = ((piy - Y1) * 100 / (Y3 - Y1));
-   color = get_color(t__mlx, p, t__mlx->nbr_map->nbr_array[line][cursor],t__mlx->nbr_map->nbr_array[line + 1][cursor]);
-   mlx_pixel_put(t__mlx->mlx, t__mlx->win, X1, piy, color);
-   piy = ( piy > Y3 ) ? piy - 1 : piy + 1;
-   }
-   }
-   cursor++;
-   }
-cursor = 0;
-line ++;
-}
-}
-
-static void fullcolor(t_init t__mlx)
-{
-	;	
-
-}
-*/
-/*
-   static void	line_D(t_init *t__mlx)
-   {
-   int	color;
-   t_coord	*tmp;
-   t_coord	*cursorx;
-   int	piy;
-   int p;
-
-   cursorx = t__mlx->coord;
-   while (cursorx != NULL)
-   {
-   tmp = cursorx;
-   cursorx = cursorx->nextx;
-   while (tmp->nexty != NULL)
-   {
-   piy = tmp->Y1;
-   if (tmp->Y3 != NULL)
-   {
-   while (piy != tmp->Y3)
-   {
-   p = ((piy - tmp->Y1) * 100 / (tmp->Y3 - tmp->Y1));
-   color = get_color(t__mlx, p, tmp->z, tmp->nexty->z);
-   mlx_pixel_put(t__mlx->mlx, t__mlx->win, tmp->X1, piy, color);
-   piy = ( piy > tmp->Y3 ) ? piy - 1 : piy + 1;
-   }
-   }
-   tmp = tmp->nexty;
-   }
-   }
-   }
- */
-
-/*
-   static void	line_D(t_init *t__mlx)
-   {
-   int	color;
-   t_coord	*tmp;
-   t_coord	*cursorx;
-   int	piy;
-   int p;
-   int ordo;
-   int coeffdir;
-
-   cursorx = t__mlx->coord;
-   while (cursorx != NULL)
-   {
-   tmp = cursorx;
-   cursorx = cursorx->nextx;
-   while (tmp->nexty != NULL)
-   {
-   piy = tmp->Y1;
-   coeffdir = (float) (tmp->Y3 - tmp->Y1 ) / (tmp->X3 - tmp->X1);
-   ordo = tmp->Y1 - (coeffdir * tmp->X1);
-   if (tmp->Y3 != NULL)
-   {
-   while (piy != tmp->Y3)
-   {
-   p = ((piy - tmp->Y1) * 100 / (tmp->Y3 - tmp->Y1));
-   color = get_color(t__mlx, p, tmp->z, tmp->nexty->z);
-   mlx_pixel_put(t__mlx->mlx, t__mlx->win, (coeffdir * piy + ordo) + PADD, piy + PADD, color);
-   piy = ( piy > tmp->Y3 ) ? piy - 1 : piy + 1;
-   }
-   }
-   tmp = tmp->nexty;
-   }
-   }
-   }
-
- */
-
-static inline void	line_X_y(t_init *t__mlx)
-{
-	int	color;
-	t_coord	*tmp;
-	t_coord	*cursorx;
-	int	piy;
-	float ordo;
-	float coeffdir;
-	int p;
-
-	cursorx = t__mlx->coord;
-	while (cursorx != NULL)
-	{
-		tmp = cursorx;
-		cursorx = cursorx->nextx;
-		while (tmp != NULL && tmp->nextx != NULL)
-		{
-			piy = tmp->Y1;
-			if (tmp->X2 - tmp->X1 != 0)
-			{
-				coeffdir = (float) (tmp->Y2 - tmp->Y1 ) / (tmp->X2 - tmp->X1);
-				ordo = tmp->Y1 - (coeffdir * tmp->X1);
-				while (piy != tmp->Y2)
-				{
-					p = ((piy - tmp->Y1) * 100 / (tmp->Y2 - tmp->Y1));
-					color = get_color(t__mlx, p, tmp->z, tmp->nextx->z);
-					mlx_pixel_put(t__mlx->mlx, t__mlx->win, (-piy + ordo) / - coeffdir + t__mlx->hpadd, piy + t__mlx->vpadd, color);
-					piy = ( piy > tmp->Y2 ) ? piy - 1 : piy + 1;
-				}
-			}
-			else
-			{
-				while (piy != tmp->Y2)
-				{
-					p = ((piy - tmp->Y1) * 100 / (tmp->Y2 - tmp->Y1));
-					color = get_color(t__mlx, p, tmp->z, tmp->nextx->z);
-					mlx_pixel_put(t__mlx->mlx, t__mlx->win, tmp->X2 + t__mlx->hpadd, piy + t__mlx->vpadd, color);
-					piy = ( piy > tmp->Y2 ) ? piy - 1 : piy + 1;
-				}
-
-			}
-			tmp = tmp->nexty;
-		}
-	}
-}
-
-
-static inline void	line_X_x(t_init *t__mlx)
+static void fullcolor1(t_init *t__mlx)
 {
 	int	color;
 	t_coord	*tmp;
@@ -328,88 +32,7 @@ static inline void	line_X_x(t_init *t__mlx)
 	float ordo;
 	float coeffdir;
 	int p;
-
-	cursorx = t__mlx->coord;
-	while (cursorx != NULL)
-	{
-		tmp = cursorx;
-		cursorx = cursorx->nextx;
-		while (tmp != NULL && tmp->nextx != NULL)
-		{
-			pix = tmp->X1;
-			coeffdir = (float) (tmp->Y2 - tmp->Y1 ) / (tmp->X2 - tmp->X1);
-			ordo = tmp->Y1 - (coeffdir * tmp->X1);
-			if (tmp->X2 - tmp->X1 != 0)
-			{
-				while (pix != tmp->X2)
-				{
-					int piy = coeffdir * pix + ordo;
-					p = ((pix - tmp->X1) * 100 / (tmp->X2 - tmp->X1));
-					color = get_color(t__mlx, p, tmp->z, tmp->nextx->z);
-					mlx_pixel_put(t__mlx->mlx, t__mlx->win, pix + t__mlx->hpadd, (coeffdir * pix) + ordo + t__mlx->vpadd, color);
-					pix = ( pix > tmp->X2 ) ? pix - 1 : pix + 1;
-				}
-			}
-			tmp = tmp->nexty;
-		}
-	}
-}
-
-static inline void	line_Y_y(t_init *t__mlx)
-{
-	int	color;
-	t_coord	*tmp;
-	t_coord	*cursorx;
-	int	piy;
-	float ordo;
-	float coeffdir;
-	int p;
-
-	cursorx = t__mlx->coord;
-	while (cursorx != NULL)
-	{
-		tmp = cursorx;
-		cursorx = cursorx->nextx;
-		while (tmp != NULL && tmp->nexty != NULL)
-		{
-			piy = tmp->Y1;
-			if ( tmp->X3 - tmp->X1 != 0)
-			{
-				coeffdir = (float) (tmp->Y3 - tmp->Y1 ) / (tmp->X3 - tmp->X1);
-				ordo = tmp->Y1 - (coeffdir * tmp->X1);
-				while (piy != tmp->Y3)
-				{
-					p = ((piy - tmp->Y1) * 100 / (tmp->Y3 - tmp->Y1));
-					color = get_color(t__mlx, p, tmp->z, tmp->nexty->z);
-					mlx_pixel_put(t__mlx->mlx, t__mlx->win, (-piy + ordo) / - coeffdir + t__mlx->hpadd, piy  + t__mlx->vpadd, color);
-					piy = ( piy > tmp->Y3 ) ? piy - 1 : piy + 1;
-				}
-			}
-			else
-			{
-				while (piy != tmp->Y3)
-				{
-					p = ((piy - tmp->Y1) * 100 / (tmp->Y3 - tmp->Y1));
-					color = get_color(t__mlx, p, tmp->z, tmp->nexty->z);
-					mlx_pixel_put(t__mlx->mlx, t__mlx->win, tmp->X3 + t__mlx->hpadd, piy  + t__mlx->vpadd, color);
-					piy = ( piy > tmp->Y3 ) ? piy - 1 : piy + 1;
-				}
-			}
-			tmp=tmp->nexty;
-		}
-	}
-}
-
-
-static inline void	line_Y_x(t_init *t__mlx)
-{
-	int	color;
-	t_coord	*tmp;
-	t_coord	*cursorx;
-	int	pix;
-	float ordo;
-	float coeffdir;
-	int p;
+	int VAL;
 
 	cursorx = t__mlx->coord;
 	while (cursorx != NULL)
@@ -422,18 +45,112 @@ static inline void	line_Y_x(t_init *t__mlx)
 			if (tmp->X3 - tmp->X1 != 0)
 			{
 				coeffdir = (float) (tmp->Y3 - tmp->Y1 ) / (tmp->X3 - tmp->X1);
-				ordo = tmp->Y1 - (coeffdir * tmp->X1);
 				while (pix != tmp->X3)
 				{
+				ordo = tmp->Y1 - (coeffdir * tmp->X1);
+					VAL = tmp->Y1;
+					while (VAL != tmp->Y3)
+					{
+					ordo = ordo+1;
 					p = ((pix - tmp->X1) * 100 / (tmp->X3 - tmp->X1));
 					color = get_color(t__mlx, p, tmp->z, tmp->nexty->z);
 					mlx_pixel_put(t__mlx->mlx, t__mlx->win, pix + t__mlx->hpadd, (coeffdir * pix) + ordo + t__mlx->vpadd, color);
+					VAL = ( VAL > tmp->Y3 ) ? VAL - 1 : VAL + 1;
+					}
 					pix = ( pix > tmp->X3 ) ? pix - 1 : pix + 1;
 				}
 			}
 			tmp = tmp->nexty;
 		}
 	}
+
+}
+
+static void	slide(t_init *t__mlx, t_coord *tmp)
+{
+	int pix = tmp->X1;
+	int	piy;	
+//	int p = ((pix - tmp->X1) * 100 / (tmp->X2 - tmp->X1));
+//	int color = get_color(t__mlx, p, tmp->z, tmp->nextx->z);
+	int coeffdir = (float) (tmp->Y2 - tmp->Y1 ) / (tmp->X2 - tmp->X1);
+	int ordo = tmp->Y1 - (coeffdir * tmp->X1);
+	int x1, x2, x3, x4;
+	int y1, y2, y3, y4;
+
+
+	x1 = tmp->X1;
+	x2 = tmp->X2;
+	x3 = tmp->X3;
+	x4 = tmp->nextx->nexty->x;
+	y1 = tmp->Y1;
+	y2 = tmp->Y2;
+	y3 = tmp->Y3;
+	y4 = tmp->nextx->nexty->y;
+	coeffdir = (y3 - y1)/(x3 - x1);
+	ordo = y1 - (coeffdir * x1);
+	pix = x1;
+	piy = y1;
+	
+mlx_pixel_put(t__mlx->mlx, t__mlx->win, x1 + t__mlx->hpadd , y1 + t__mlx->vpadd, CRED);
+	mlx_pixel_put(t__mlx->mlx, t__mlx->win, x2 + t__mlx->hpadd , y2 + t__mlx->vpadd, CRED);
+	mlx_pixel_put(t__mlx->mlx, t__mlx->win, x3 + t__mlx->hpadd , y3 + t__mlx->vpadd, CRED);
+	mlx_pixel_put(t__mlx->mlx, t__mlx->win, x4 + t__mlx->hpadd , y4 + t__mlx->vpadd, CRED);
+
+	while (pix != x2)
+	{	
+		while (piy != y2)
+		{
+			if(coeffdir == 0)
+			mlx_pixel_put(t__mlx->mlx, t__mlx->win, piy-ordo + t__mlx->hpadd , piy + t__mlx->vpadd, CGRE);
+			piy = ( piy > y2 ) ? piy - 1 : piy + 1;
+		}
+			piy = y1;
+			pix = ( pix > x2 ) ? pix - 1 : pix + 1;
+	}	
+
+
+
+}
+
+static void fullcolor2(t_init *t__mlx)
+{
+	int	color;
+	t_coord	*tmp;
+	t_coord	*cursorx;
+	int	pix;
+	float ordo;
+	float coeffdir;
+	int p;
+	int VAL;
+	int mod;
+
+	cursorx = t__mlx->coord;
+	while (cursorx != NULL)
+	{
+		tmp = cursorx;
+		cursorx = cursorx->nextx;
+		while (tmp != NULL && tmp->nextx != NULL && tmp->nexty)
+		{
+			pix = tmp->X1;
+			mod = 0;
+			if (tmp->X3 - tmp->X1 != 0)
+			{
+						slide(t__mlx, tmp);
+			}
+			tmp = tmp->nexty;
+		}
+	}
+}
+
+
+static void fullcolor(t_init *t__mlx)
+{
+	line_Y_x(t__mlx);
+	line_Y_y(t__mlx);
+	line_X_x(t__mlx);
+	line_X_y(t__mlx);
+//	fullcolor1(t__mlx);
+//	fullcolor2(t__mlx);
 }
 
 static void	dot_printing(t_init *t__mlx)
@@ -590,12 +307,8 @@ inline void	creat_window(t_init *t_init_mlx)
 	ft_putendl("EXPLORE Ok");
 	//	dot_printing(t_init_mlx);
 
-	line_Y_x(t_init_mlx);
-	line_Y_y(t_init_mlx);
-	line_X_x(t_init_mlx);
-	line_X_y(t_init_mlx);
+	fullcolor(t_init_mlx);
 	//	put_line(t_init_mlx, t_init_mlx->coord[0]);
-	//	fullcolor(t_init_mlx);
 }
 
 void		init_fdf(const char *str, t_init *t_init_mlx)

@@ -17,6 +17,7 @@ SRC = ./src/divert.c \
 	./src/initialize.c \
 	./src/main.c \
 	./src/calc.c \
+	./src/line.c \
 	./src/get_next_line.c \
 	./src/get_nbr_rewrite.c
 

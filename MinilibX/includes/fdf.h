@@ -72,8 +72,11 @@ typedef struct s_init
 	float val3;
 	float	val4
 }t_init;
-
 void		creat_window(t_init *t_init_mlx);
+void		line_X_y(t_init *t__mlx);
+void		line_X_x(t_init *t__mlx);
+void		line_Y_y(t_init *t__mlx);
+void		line_Y_x(t_init *t__mlx);
 void		freecoord(t_coord *begin);
 void		init_Fdf(const char *str, t_init t_init_mlx);
 int		get_color(t_init *t__mlx, int per, int value, int next);
