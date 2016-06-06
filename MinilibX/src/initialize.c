@@ -72,8 +72,10 @@ static void	slide(t_init *t__mlx, t_coord *tmp)
 	int	piy;	
 //	int p = ((pix - tmp->X1) * 100 / (tmp->X2 - tmp->X1));
 //	int color = get_color(t__mlx, p, tmp->z, tmp->nextx->z);
-	int coeffdir = (float) (tmp->Y2 - tmp->Y1 ) / (tmp->X2 - tmp->X1);
-	int ordo = tmp->Y1 - (coeffdir * tmp->X1);
+	t_edr eab;
+	t_edr eac;
+	t_edr ecd;
+	t_edr ebd;
 	int x1, x2, x3, x4;
 	int y1, y2, y3, y4;
 
@@ -86,57 +88,93 @@ static void	slide(t_init *t__mlx, t_coord *tmp)
 	y2 = tmp->Y2;
 	y3 = tmp->Y3;
 	y4 = tmp->nextx->nexty->y;
-	coeffdir = (y3 - y1)/(x3 - x1);
-	ordo = y1 - (coeffdir * x1);
+	eab.coeffdir = (float) (y3 - y1 ) / (x3 - x1);
+	eab.ordo = y1 - (eab.coeffdir * x1);
+	eac.coeffdir = (float) (y2 - y1 ) / (x2 - x1);
+	eac.ordo = y1 - (eac.coeffdir * x1);
+	ecd.coeffdir = (float) (y4 - y3 ) / (x4 - x3);
+	ecd.ordo = y3 - (ecd.coeffdir * x3);
+	ebd.coeffdir = (float) (y4 - y2 ) / (x4 - x2);
+	ebd.ordo = y2 - (ebd.coeffdir * x2);
 	pix = x1;
 	piy = y1;
-	
-mlx_pixel_put(t__mlx->mlx, t__mlx->win, x1 + t__mlx->hpadd , y1 + t__mlx->vpadd, CRED);
-	mlx_pixel_put(t__mlx->mlx, t__mlx->win, x2 + t__mlx->hpadd , y2 + t__mlx->vpadd, CRED);
-	mlx_pixel_put(t__mlx->mlx, t__mlx->win, x3 + t__mlx->hpadd , y3 + t__mlx->vpadd, CRED);
-	mlx_pixel_put(t__mlx->mlx, t__mlx->win, x4 + t__mlx->hpadd , y4 + t__mlx->vpadd, CRED);
 
-	while (pix != x2)
-	{	
-		while (piy != y2)
+	int x ;
+	int xp ;
+	int	xlim;
+	int	xlim2;
+	int ylim;
+	x = (piy - eab.ordo)/  eab.coeffdir;
+
+	if (x1 < x2 && y1 != y3)
+	{
+	    while (piy != y3)
+	    {
+		//	ft_putstrnb("slide", piy);
+		x = (piy - eab.ordo)/  eab.coeffdir;
+		xp = (piy - eac.ordo)/  eac.coeffdir;
+		xlim = (piy - ebd.ordo)/  ebd.coeffdir;
+		xlim2 = (piy - ecd.ordo)/  ecd.coeffdir;
+		ylim = (ebd.coeffdir * x + ebd.ordo);
+		/*
+		   ft_putstrnb("print x : ", x);
+		   ft_putstrnb("print x' : ", xp);
+		   ft_putstrnb("print y  : ", piy);
+		 */
+		if (x < xp)
 		{
-			if(coeffdir == 0)
-			mlx_pixel_put(t__mlx->mlx, t__mlx->win, piy-ordo + t__mlx->hpadd , piy + t__mlx->vpadd, CGRE);
-			piy = ( piy > y2 ) ? piy - 1 : piy + 1;
+		    x = ( x > xp ) ? x - 2 : x + 2;
+		    while (x < xp && x < xlim - 2 )
+		    {
+				if (t__mlx->clr == 0)
+				mlx_pixel_put(t__mlx->mlx, t__mlx->win, x + t__mlx->hpadd ,piy + t__mlx->vpadd, CBLA);
+				else
+				mlx_pixel_put(t__mlx->mlx, t__mlx->win, x + t__mlx->hpadd ,piy + t__mlx->vpadd, CWHI);
+			x = ( x > xp ) ? x - 1 : x + 1;
+		ylim = (eac.coeffdir * x + eac.ordo);
+		    }
 		}
-			piy = y1;
-			pix = ( pix > x2 ) ? pix - 1 : pix + 1;
-	}	
+		piy = ( piy > y3 ) ? piy - 1 : piy + 1;
+	    }
+	piy = y3;
+	while (piy != y4)
+	{
+	//	ft_putstrnb("slide", piy);
+		xp = (piy - ebd.ordo)/  ebd.coeffdir;
+		x = (piy - ecd.ordo)/  ecd.coeffdir;
+		xlim = (piy - eac.ordo)/  eac.coeffdir;
+		xlim2 = (piy - ebd.ordo)/  ecd.coeffdir;
+		if ((x+=2) < (xp -= 2) && piy+2 < y4)
+		{
+		    while (x < xp  && x < xlim - 2)
+		    {	
+			if (t__mlx->clr == 0)
+			mlx_pixel_put(t__mlx->mlx, t__mlx->win, x + t__mlx->hpadd ,piy + t__mlx->vpadd, CBLA);
+			else
+			mlx_pixel_put(t__mlx->mlx, t__mlx->win, x + t__mlx->hpadd ,piy + t__mlx->vpadd, CWHI);
+			x = ( x > xp ) ? x - 1 : x + 1;
+		    }
+		}
+		piy = ( piy > y4 ) ? piy - 1 : piy + 1;
+	}
 
-
-
+}
 }
 
 static void fullcolor2(t_init *t__mlx)
 {
-	int	color;
 	t_coord	*tmp;
 	t_coord	*cursorx;
-	int	pix;
-	float ordo;
-	float coeffdir;
-	int p;
-	int VAL;
-	int mod;
 
 	cursorx = t__mlx->coord;
+		tmp = cursorx;
 	while (cursorx != NULL)
 	{
 		tmp = cursorx;
 		cursorx = cursorx->nextx;
 		while (tmp != NULL && tmp->nextx != NULL && tmp->nexty)
 		{
-			pix = tmp->X1;
-			mod = 0;
-			if (tmp->X3 - tmp->X1 != 0)
-			{
 						slide(t__mlx, tmp);
-			}
 			tmp = tmp->nexty;
 		}
 	}
@@ -145,10 +183,14 @@ static void fullcolor2(t_init *t__mlx)
 
 static void fullcolor(t_init *t__mlx)
 {
+/*
 	line_Y_x(t__mlx);
 	line_Y_y(t__mlx);
 	line_X_x(t__mlx);
 	line_X_y(t__mlx);
+*/
+//	drawfunc(t__mlx);
+	drawfunc(t__mlx);
 //	fullcolor1(t__mlx);
 //	fullcolor2(t__mlx);
 }
@@ -232,10 +274,6 @@ static void	get_real_value(t_init *t__mlx)
 		while (tmp != NULL)
 		{
 			setcoord(t__mlx, tmp);
-			ft_putendl("===================");
-			ft_putstrnb("new value X : ", tmp->x);
-			ft_putstrnb("new value Y : ", tmp->y);
-			ft_putstrnb("new value Z : ", tmp->z);
 			tmp = tmp->nexty;
 		}
 	}
@@ -283,28 +321,23 @@ static void	explore(t_coord *begin)
 		tmp = cursorx;
 		while (tmp->nexty != NULL)
 		{
-			ft_putstrnb("value z :", tmp->z);
 			tmp = tmp->nexty;
 		}
-		ft_putstrnb("value z :", tmp->z);
-		ft_putstrnb("next x -> value of x : ", cursorx->x);
 		cursorx = cursorx->nextx;
 	}
 }
 
 inline void	creat_window(t_init *t_init_mlx)
 {
+	ft_putendl("======================= NEW WINDOW ====================");
 	tryalloc(t_init_mlx->win);
 	//	line(t_init_mlx);
 
 	//	lineR(t_init_mlx);
 	//	lineD(t_init_mlx);
 	definition(t_init_mlx);
-	ft_putendl("Definition OK");
 	get_real_value(t_init_mlx);
-	ft_putendl("REAL VALUE Ok");
 	explore(t_init_mlx->coord);
-	ft_putendl("EXPLORE Ok");
 	//	dot_printing(t_init_mlx);
 
 	fullcolor(t_init_mlx);
@@ -337,8 +370,8 @@ void		init_fdf(const char *str, t_init *t_init_mlx)
 	t_init_mlx->vpadd = 20;	
 	t_init_mlx->an = 0.;
 	t_init_mlx->space = SPACE;
-
-
+	t_init_mlx->mod = 1;
+	t_init_mlx->clr = 0;
 	//	t_init_mlx->nbr_map = number_map;
 	t_init_mlx->wid = WIDTH;
 	t_init_mlx->hei = HEIGHT;
@@ -353,6 +386,6 @@ void		init_fdf(const char *str, t_init *t_init_mlx)
 	creat_window(t_init_mlx);
 	ft_putendl("Creation fenetre Ok");
 	mlx_mouse_hook(t_init_mlx->win, my_mouse_func, &t_init_mlx);
-	mlx_key_hook(t_init_mlx->win, my_key_func, t_init_mlx);
+	mlx_hook(t_init_mlx->win, 2,1, my_key_func, t_init_mlx);
 	mlx_loop(t_init_mlx->mlx);
 }

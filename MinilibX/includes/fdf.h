@@ -5,10 +5,10 @@
 # include "./get_nbr.h"
 
 # define WIDTH 650
-# define HEIGHT 700
+# define HEIGHT 600
 # define WIN_N "42 FDF map"
 # define PADD 20
-# define SPACE 20
+# define SPACE 15
 # define CCYA 0X0000FFFF
 # define CRED 0X00FF0000
 # define CWHI 0X00FFFFFF
@@ -17,6 +17,7 @@
 # define CGRE 0X0000FF00
 # define CBLU 0X000000FF
 # define CPIN 0X00FF00FF
+# define CBLA 0X00000000
 
 # define RP0 (unsigned int)(((p_now - 0.) * 5.)* 0XFF/ 100.)
 # define RP20 (unsigned int)(((p_now - 20.) * 5.)* 0XFF/ 100.)
@@ -44,10 +45,25 @@ typedef struct	s_dot
 	
 }t_dot;
 
+typedef struct s_egment_param
+{
+	int	xa;
+	int	xb;
+	int	ya;
+	int	yb;
+	int	color;
+}t_segment;
+
+
 typedef struct	s_math
 {
-	int delta_x;
-	int delta_y;
+	float	dx;
+	float	dy;
+	float	dp;
+	float	deltaE;
+	float	deltaNE;
+	int	x;
+	int	y;
 
 }		t_math;
 
@@ -63,15 +79,23 @@ typedef struct s_init
 	float		an;
 	int		space;
 	int		isset;
-	void	*mlx;
-	void	*win;
-	float	rotz;
-	float	roty;
-	float	val;
-	float	val2;
-	float val3;
-	float	val4
+	float		mod;
+	int		clr;
+	void		*mlx;
+	void		*win;
+	float		rotz;
+	float		roty;
+	float		val;
+	float		val2;
+	float		val3;
+	float		val4;
 }t_init;
+
+typedef struct s_edr
+{
+	float ordo;
+	float coeffdir;
+}t_edr;
 void		creat_window(t_init *t_init_mlx);
 void		line_X_y(t_init *t__mlx);
 void		line_X_x(t_init *t__mlx);
@@ -86,5 +110,7 @@ int		my_key_func(int keycode, void *param);
 void		put_line(t_init *t__mlx, t_coord *coord);
 void		setcoord(t_init *t_mlx, t_coord * coord);
 int		percent(int low_range, int max_range, int value);
-
+void		drawfunc(t_init *t__mlx);
+void		drawfcase(t_coord *t_dot, t_init *t__mlx);
+void		drawfcase2(t_coord *t_dot, t_init *t__mlx);
 #endif

@@ -49,15 +49,14 @@ static void	resetcoord(t_init *t__mlx, t_coord *coord)
 		if (coord->nextx)
 		{
 			int tmpnz = percent(t__mlx->LOW_RANGE , t__mlx->MAX_RANGE, coord->nextx->z);
-			float angz = tmpnz - percent(t__mlx->LOW_RANGE , t__mlx->MAX_RANGE, coord->z);
+			int angz = tmpnz - percent(t__mlx->LOW_RANGE , t__mlx->MAX_RANGE, coord->z);
 //			angz = (0.25) * angz / 100;
-			angz = (angz*2) *(t__mlx->space) / 100;
-
-
+			ft_putstrnb("angz value : " , angz);
+			int fangz = (angz ) * (t__mlx->space*t__mlx->mod) / 100;
 			t__mlx->val = (1 * cos(t__mlx->an + t__mlx->rotz)) - (1 * sin(t__mlx->an - t__mlx->rotz));
 			t__mlx->val2 = (1 * sin(t__mlx->an + t__mlx->roty))+ (1 * cos(t__mlx->an - t__mlx->roty));
-			coord->nextx->x = t__mlx->val * t__mlx->space + coord->x + angz;
-			coord->nextx->y = t__mlx->val2 * t__mlx->space + coord->y + angz;
+			coord->nextx->x = t__mlx->val * t__mlx->space + coord->x;
+			coord->nextx->y = t__mlx->val2 * t__mlx->space + coord->y - fangz;
 		}
 		if (coord->nexty)
 		{
@@ -65,12 +64,12 @@ static void	resetcoord(t_init *t__mlx, t_coord *coord)
 			tmpnz = percent(t__mlx->LOW_RANGE , t__mlx->MAX_RANGE, coord->nexty->z);
 			int angz = 0;
 				angz = percent(t__mlx->LOW_RANGE , t__mlx->MAX_RANGE, coord->nexty->z)  - percent(t__mlx->LOW_RANGE , t__mlx->MAX_RANGE, coord->z);
-				angz = (angz * 2)* (t__mlx->space)/100;
+			float fangz = (angz) * (t__mlx->space * t__mlx->mod)/100.;
 				t__mlx->val3 = 1 * cos(t__mlx->an + M_PI/2 + t__mlx->rotz ) - 1 * sin(t__mlx->an + M_PI/2 - t__mlx->rotz);
-				coord->nexty->x = + t__mlx->val3 * t__mlx->space + coord->x - angz;
+				coord->nexty->x = t__mlx->val3 * t__mlx->space + coord->x;
 				t__mlx->val4 = 1 * sin(t__mlx->an + M_PI/2 + t__mlx->roty) + 1 * cos(t__mlx->an + M_PI/2 + t__mlx->roty);
-				coord->nexty->y = + t__mlx->val4 * t__mlx->space  + coord->y - angz;
-			}
+				coord->nexty->y =  t__mlx->val4 * t__mlx->space  + coord->y - fangz;
+
 		}
 	}
 }

@@ -53,8 +53,6 @@ int my_key_func(int keycode, void *param)
 	t_init *tmp;
 		tmp = (t_init*)param;
 
-	write(0, "key ", 5);
-		ft_putnbrnl(keycode);
 	if (keycode == 53 || keycode == 65307)
 	{
 	//	freecoord((t_coord*)param->coord);
@@ -65,36 +63,32 @@ int my_key_func(int keycode, void *param)
 	if (keycode == 111)
 	{
 		tmp->an = tmp->an + 0.1;	
-		creat_window(tmp);
+		tmp->clr = 1;	
 	}
 	if (keycode == 112)
 	{
-		tmp->an = tmp->an - 0.1;	
-		creat_window(tmp);
+		tmp->an = tmp->an - 0.1;
+		tmp->clr = 0;	
 	}
 	if (keycode == 65361)
 	{
 		tmp->hpadd = tmp->hpadd - 40;	
-		creat_window(tmp);
 	}
 	if (keycode == 65362)
 	{
 		tmp->vpadd = tmp->vpadd - 35;	
-		creat_window(tmp);
 	}
 	if (keycode == 65363)
 	{
 		tmp->hpadd = tmp->hpadd + 40;	
-		creat_window(tmp);
 	}
 	if (keycode == 65364)
 	{
 		tmp->vpadd = tmp->vpadd + 35;	
-		creat_window(tmp);
 	}
 	if (keycode == 38)
 	{
-		tmp->space = tmp->space + 1;
+		tmp->space = tmp->space + 50;
 	}
 	if (keycode == 233)
 	{
@@ -102,25 +96,24 @@ int my_key_func(int keycode, void *param)
 	}
 	if (keycode == 40)
 	{
-		tmp->rotz = tmp->rotz + 0.1;
+//		tmp->rotz = tmp->rotz + 0.1;
 	}
 	if (keycode == 45)
 	{
-		tmp->rotz = tmp->rotz - 0.1;
+//		tmp->rotz = tmp->rotz - 0.1;
 	}
 	if (keycode == 39)
 	{
-		tmp->roty = tmp->roty + 0.1;
+		tmp->mod = tmp->mod + 0.5;
 	}
 	if (keycode == 34)
 	{
-		tmp->roty = tmp->roty - 0.1;
+		tmp->mod = tmp->mod - 0.5;
 	}
 		creat_window(tmp);
 	//	printf("coucou");
 	//	printf("coucou");
 	//	mlx_pixel_put(mlx_ptr, win_ptr, i, i, 0x00FFFFFF);
-		ft_putnbrnl(keycode);
 	return(0);
 }
 
