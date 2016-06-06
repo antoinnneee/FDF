@@ -3,6 +3,7 @@
 # include "../libft/includes/libft.h"
 # include "./get_next_line.h"
 # include "./get_nbr.h"
+# include <mlx.h>
 
 # define WIDTH 650
 # define HEIGHT 600
@@ -43,17 +44,7 @@ typedef struct	s_dot
 	int	y;
 	int	z;
 	
-}t_dot;
-
-typedef struct s_egment_param
-{
-	int	xa;
-	int	xb;
-	int	ya;
-	int	yb;
-	int	color;
-}t_segment;
-
+}				t_dot;
 
 typedef struct	s_math
 {
@@ -64,23 +55,23 @@ typedef struct	s_math
 	float	deltaNE;
 	int	x;
 	int	y;
+	int inv;
+}				t_math;
 
-}		t_math;
-
-typedef struct s_init
+typedef struct	s_init
 {
-	t_coord	*coord;
-	int		*rangen;
-	int		wid;
-	int		hei;
-	int		rangc;
-	int		hpadd;
-	int		vpadd;
+	t_coord		*coord;
+	int			*rangen;
+	int			wid;
+	int			hei;
+	int			rangc;
+	int			hpadd;
+	int			vpadd;
 	float		an;
-	int		space;
-	int		isset;
+	int			space;
+	int			isset;
 	float		mod;
-	int		clr;
+	int			clr;
 	void		*mlx;
 	void		*win;
 	float		rotz;
@@ -89,28 +80,30 @@ typedef struct s_init
 	float		val2;
 	float		val3;
 	float		val4;
-}t_init;
+}				t_init;
 
-typedef struct s_edr
-{
-	float ordo;
-	float coeffdir;
-}t_edr;
 void		creat_window(t_init *t_init_mlx);
 void		line_X_y(t_init *t__mlx);
 void		line_X_x(t_init *t__mlx);
 void		line_Y_y(t_init *t__mlx);
 void		line_Y_x(t_init *t__mlx);
 void		freecoord(t_coord *begin);
-void		init_Fdf(const char *str, t_init t_init_mlx);
-int		get_color(t_init *t__mlx, int per, int value, int next);
-int		my_mouse_func(int button, int x, int y, void *param);
-int		get_color_def(int p);
-int		my_key_func(int keycode, void *param);
+void		fun_error(const char *str, void *ptr);
+void		init_fdf(const char *str, t_init *t_init_mlx);
+int			get_clr(t_init *t__mlx, int per, int value, int next);
+int			get_color_def(int p);
+int			my_key_func(int keycode, void *param);
 void		put_line(t_init *t__mlx, t_coord *coord);
 void		setcoord(t_init *t_mlx, t_coord * coord);
-int		percent(int low_range, int max_range, int value);
+int			percent(int low_range, int max_range, int value);
 void		drawfunc(t_init *t__mlx);
 void		drawfcase(t_coord *t_dot, t_init *t__mlx);
 void		drawfcase2(t_coord *t_dot, t_init *t__mlx);
+t_coord		*creat_list(t_coord *begin, int *tab_dim, int nb_line);
+int			*get_dim(const char *ln);
+void		tryalloc(void	*ptr);
+int			color_chose(double p);
+int			invertcoord(t_coord *t_dot);
+int			invert2coord(t_coord *t_dot);
+
 #endif

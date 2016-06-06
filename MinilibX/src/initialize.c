@@ -6,7 +6,7 @@
 /*   By: abureau <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/04/26 12:47:41 by abureau           #+#    #+#             */
-/*   Updated: 2016/05/18 17:56:26 by abureau          ###   ########.fr       */
+/*   Updated: 2016/06/06 19:21:20 by abureau          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,216 +15,12 @@
 #include <stdio.h>
 #include "../libft/includes/libft.h"
 #include "../includes/get_nbr.h"
-#include "../mlx/mlx.h"
+#include <mlx.h>
 #include <unistd.h>
 #include <sys/types.h>
 #include <errno.h>
 #include <sys/wait.h>
 #include <stdlib.h>
-
-
-static void fullcolor1(t_init *t__mlx)
-{
-	int	color;
-	t_coord	*tmp;
-	t_coord	*cursorx;
-	int	pix;
-	float ordo;
-	float coeffdir;
-	int p;
-	int VAL;
-
-	cursorx = t__mlx->coord;
-	while (cursorx != NULL)
-	{
-		tmp = cursorx;
-		cursorx = cursorx->nextx;
-		while (tmp != NULL && tmp->nexty != NULL)
-		{
-			pix = tmp->X1;
-			if (tmp->X3 - tmp->X1 != 0)
-			{
-				coeffdir = (float) (tmp->Y3 - tmp->Y1 ) / (tmp->X3 - tmp->X1);
-				while (pix != tmp->X3)
-				{
-				ordo = tmp->Y1 - (coeffdir * tmp->X1);
-					VAL = tmp->Y1;
-					while (VAL != tmp->Y3)
-					{
-					ordo = ordo+1;
-					p = ((pix - tmp->X1) * 100 / (tmp->X3 - tmp->X1));
-					color = get_color(t__mlx, p, tmp->z, tmp->nexty->z);
-					mlx_pixel_put(t__mlx->mlx, t__mlx->win, pix + t__mlx->hpadd, (coeffdir * pix) + ordo + t__mlx->vpadd, color);
-					VAL = ( VAL > tmp->Y3 ) ? VAL - 1 : VAL + 1;
-					}
-					pix = ( pix > tmp->X3 ) ? pix - 1 : pix + 1;
-				}
-			}
-			tmp = tmp->nexty;
-		}
-	}
-
-}
-
-static void	slide(t_init *t__mlx, t_coord *tmp)
-{
-	int pix = tmp->X1;
-	int	piy;	
-//	int p = ((pix - tmp->X1) * 100 / (tmp->X2 - tmp->X1));
-//	int color = get_color(t__mlx, p, tmp->z, tmp->nextx->z);
-	t_edr eab;
-	t_edr eac;
-	t_edr ecd;
-	t_edr ebd;
-	int x1, x2, x3, x4;
-	int y1, y2, y3, y4;
-
-
-	x1 = tmp->X1;
-	x2 = tmp->X2;
-	x3 = tmp->X3;
-	x4 = tmp->nextx->nexty->x;
-	y1 = tmp->Y1;
-	y2 = tmp->Y2;
-	y3 = tmp->Y3;
-	y4 = tmp->nextx->nexty->y;
-	eab.coeffdir = (float) (y3 - y1 ) / (x3 - x1);
-	eab.ordo = y1 - (eab.coeffdir * x1);
-	eac.coeffdir = (float) (y2 - y1 ) / (x2 - x1);
-	eac.ordo = y1 - (eac.coeffdir * x1);
-	ecd.coeffdir = (float) (y4 - y3 ) / (x4 - x3);
-	ecd.ordo = y3 - (ecd.coeffdir * x3);
-	ebd.coeffdir = (float) (y4 - y2 ) / (x4 - x2);
-	ebd.ordo = y2 - (ebd.coeffdir * x2);
-	pix = x1;
-	piy = y1;
-
-	int x ;
-	int xp ;
-	int	xlim;
-	int	xlim2;
-	int ylim;
-	x = (piy - eab.ordo)/  eab.coeffdir;
-
-	if (x1 < x2 && y1 != y3)
-	{
-	    while (piy != y3)
-	    {
-		//	ft_putstrnb("slide", piy);
-		x = (piy - eab.ordo)/  eab.coeffdir;
-		xp = (piy - eac.ordo)/  eac.coeffdir;
-		xlim = (piy - ebd.ordo)/  ebd.coeffdir;
-		xlim2 = (piy - ecd.ordo)/  ecd.coeffdir;
-		ylim = (ebd.coeffdir * x + ebd.ordo);
-		/*
-		   ft_putstrnb("print x : ", x);
-		   ft_putstrnb("print x' : ", xp);
-		   ft_putstrnb("print y  : ", piy);
-		 */
-		if (x < xp)
-		{
-		    x = ( x > xp ) ? x - 2 : x + 2;
-		    while (x < xp && x < xlim - 2 )
-		    {
-				if (t__mlx->clr == 0)
-				mlx_pixel_put(t__mlx->mlx, t__mlx->win, x + t__mlx->hpadd ,piy + t__mlx->vpadd, CBLA);
-				else
-				mlx_pixel_put(t__mlx->mlx, t__mlx->win, x + t__mlx->hpadd ,piy + t__mlx->vpadd, CWHI);
-			x = ( x > xp ) ? x - 1 : x + 1;
-		ylim = (eac.coeffdir * x + eac.ordo);
-		    }
-		}
-		piy = ( piy > y3 ) ? piy - 1 : piy + 1;
-	    }
-	piy = y3;
-	while (piy != y4)
-	{
-	//	ft_putstrnb("slide", piy);
-		xp = (piy - ebd.ordo)/  ebd.coeffdir;
-		x = (piy - ecd.ordo)/  ecd.coeffdir;
-		xlim = (piy - eac.ordo)/  eac.coeffdir;
-		xlim2 = (piy - ebd.ordo)/  ecd.coeffdir;
-		if ((x+=2) < (xp -= 2) && piy+2 < y4)
-		{
-		    while (x < xp  && x < xlim - 2)
-		    {	
-			if (t__mlx->clr == 0)
-			mlx_pixel_put(t__mlx->mlx, t__mlx->win, x + t__mlx->hpadd ,piy + t__mlx->vpadd, CBLA);
-			else
-			mlx_pixel_put(t__mlx->mlx, t__mlx->win, x + t__mlx->hpadd ,piy + t__mlx->vpadd, CWHI);
-			x = ( x > xp ) ? x - 1 : x + 1;
-		    }
-		}
-		piy = ( piy > y4 ) ? piy - 1 : piy + 1;
-	}
-
-}
-}
-
-static void fullcolor2(t_init *t__mlx)
-{
-	t_coord	*tmp;
-	t_coord	*cursorx;
-
-	cursorx = t__mlx->coord;
-		tmp = cursorx;
-	while (cursorx != NULL)
-	{
-		tmp = cursorx;
-		cursorx = cursorx->nextx;
-		while (tmp != NULL && tmp->nextx != NULL && tmp->nexty)
-		{
-						slide(t__mlx, tmp);
-			tmp = tmp->nexty;
-		}
-	}
-}
-
-
-static void fullcolor(t_init *t__mlx)
-{
-/*
-	line_Y_x(t__mlx);
-	line_Y_y(t__mlx);
-	line_X_x(t__mlx);
-	line_X_y(t__mlx);
-*/
-//	drawfunc(t__mlx);
-	drawfunc(t__mlx);
-//	fullcolor1(t__mlx);
-//	fullcolor2(t__mlx);
-}
-
-static void	dot_printing(t_init *t__mlx)
-{
-	int	color;
-	t_coord	*tmp;
-	t_coord	*cursorx;
-
-	cursorx = t__mlx->coord;
-	while (cursorx != NULL)
-	{
-		tmp = cursorx;
-		cursorx = cursorx->nextx;
-		while (tmp != NULL)
-		{
-			color = get_color(t__mlx, 100, tmp->z,tmp->z);
-			mlx_pixel_put(t__mlx->mlx, t__mlx->win, tmp->x , tmp->y , color);
-			tmp = tmp->nexty;
-		}
-	}
-}
-
-
-static void	tryalloc(void *ptr)
-{
-	if (!ptr)
-	{
-		ft_putendl("init error");
-		exit(0);
-	}
-
-}
 
 static void	definition(t_init *t__mlx)
 {
@@ -233,30 +29,25 @@ static void	definition(t_init *t__mlx)
 	int			pix;
 	int			p;
 
-	limit[0].x = WIDTH - PADD - 40;
-	limit[0].y = PADD;
 	limit[1].x = WIDTH - PADD - 30;
-	limit[1].y = PADD;
-	limit[2].x = limit[0].x;
-	limit[2].y = PADD + 70;
-	limit[3].x = limit[1].x;
-	limit[3].y = limit[2].y;
-	index = limit[0].y;
-	pix = limit[0].x;	
-	while(index != limit[2].y)
+	index = PADD;
+	pix = WIDTH - PADD - 40;
+	while (index != PADD + 70)
 	{
-		while (pix != limit[1].x)
+		while (++pix != limit[1].x)
 		{
-			p = (int)(index - limit[0].y) * 100. / (limit[2].y - limit[0].y);
-			mlx_pixel_put(t__mlx->mlx, t__mlx->win, pix, index, get_color_def(p));
-			pix ++;
+			p = (int)(index - PADD) * 100. / 70;
+			mlx_pixel_put(t__mlx->mlx,
+				t__mlx->win, pix, index, get_color_def(p));
 			if (p == 0)
-				mlx_string_put(t__mlx->mlx, t__mlx->win, limit[1].x + 2, index, get_color_def(p), ft_itoa(t__mlx->LOW_RANGE));
+				mlx_string_put(t__mlx->mlx, t__mlx->win, limit[1].x + 2, index
+						, get_color_def(p), ft_itoa(t__mlx->LOW_RANGE));
 		}
-		if (index == limit[2].y -1)	
-			mlx_string_put(t__mlx->mlx, t__mlx->win, limit[1].x + 2, index, get_color_def(p), ft_itoa(t__mlx->MAX_RANGE));
+		if (index == PADD + 69)
+			mlx_string_put(t__mlx->mlx, t__mlx->win, limit[1].x + 2, index
+					, get_color_def(p), ft_itoa(t__mlx->MAX_RANGE));
 		index++;
-		pix = limit[0].x;
+		pix = WIDTH - PADD - 40;
 	}
 }
 
@@ -279,17 +70,17 @@ static void	get_real_value(t_init *t__mlx)
 	}
 }
 
-
 static int	*get_range(t_coord *nbr)
 {
-	int	*rangen;
-	t_coord *tmp;
-	t_coord *cursorx;	
+	int		*rangen;
+	t_coord	*tmp;
+	t_coord	*cursorx;
 
-	rangen = (int*) ft_memalloc(sizeof(int) * 3);	
+	if (!nbr)
+		fun_error("error while checking range, map error", NULL);
+	rangen = (int*)ft_memalloc(sizeof(int) * 3);
 	LOW_RANGE = nbr->z;
 	MAX_RANGE = nbr->z;
-	tmp = nbr;
 	cursorx = nbr;
 	while (cursorx != NULL)
 	{
@@ -308,84 +99,36 @@ static int	*get_range(t_coord *nbr)
 	return (rangen);
 }
 
-
-static void	explore(t_coord *begin)
-{
-	t_coord	*tmp;
-	t_coord	*cursorx;
-
-	tmp = begin;
-	cursorx = begin;
-	while (cursorx != NULL)
-	{
-		tmp = cursorx;
-		while (tmp->nexty != NULL)
-		{
-			tmp = tmp->nexty;
-		}
-		cursorx = cursorx->nextx;
-	}
-}
-
 inline void	creat_window(t_init *t_init_mlx)
 {
-	ft_putendl("======================= NEW WINDOW ====================");
 	tryalloc(t_init_mlx->win);
-	//	line(t_init_mlx);
-
-	//	lineR(t_init_mlx);
-	//	lineD(t_init_mlx);
 	definition(t_init_mlx);
 	get_real_value(t_init_mlx);
-	explore(t_init_mlx->coord);
-	//	dot_printing(t_init_mlx);
-
-	fullcolor(t_init_mlx);
-	//	put_line(t_init_mlx, t_init_mlx->coord[0]);
+	drawfunc(t_init_mlx);
 }
 
 void		init_fdf(const char *str, t_init *t_init_mlx)
 {
-	t_coord		*numberarray;
 	int			fd;
 
 	fd = open(str, O_RDONLY);
 	ft_putendl("opening map ok");
 	ft_putstrnb("fd : ", fd);
-	numberarray = get_number(fd);
-	ft_putendl("number array ok");
-
-	/*
-	   number_map = get_struct_value(numberarray);
-	   tryalloc(number_map);
-	 */
-
 	t_init_mlx = (t_init*)ft_memalloc(sizeof(t_init));
 	tryalloc(t_init_mlx);
 	t_init_mlx->isset = 0;
-	t_init_mlx->rotz = 0;
-	t_init_mlx->roty = 0;
-	t_init_mlx->coord = numberarray;
+	t_init_mlx->coord = get_number(fd);
 	t_init_mlx->hpadd = 20;
-	t_init_mlx->vpadd = 20;	
+	t_init_mlx->vpadd = 20;
 	t_init_mlx->an = 0.;
 	t_init_mlx->space = SPACE;
 	t_init_mlx->mod = 1;
-	t_init_mlx->clr = 0;
-	//	t_init_mlx->nbr_map = number_map;
 	t_init_mlx->wid = WIDTH;
 	t_init_mlx->hei = HEIGHT;
-
-	t_init_mlx->rangen = get_range(numberarray);
-	//	print_map_number(t_init_mlx->nbr_map);
-	explore(t_init_mlx->coord);
-	ft_putendl("explore Ok");
+	t_init_mlx->rangen = get_range(t_init_mlx->coord);
 	t_init_mlx->mlx = mlx_init();
-	ft_putendl("Init MLX Ok");
 	t_init_mlx->win = mlx_new_window(t_init_mlx->mlx, WIDTH, HEIGHT, WIN_N);
 	creat_window(t_init_mlx);
-	ft_putendl("Creation fenetre Ok");
-	mlx_mouse_hook(t_init_mlx->win, my_mouse_func, &t_init_mlx);
-	mlx_hook(t_init_mlx->win, 2,1, my_key_func, t_init_mlx);
+	mlx_hook(t_init_mlx->win, 2, 1, my_key_func, t_init_mlx);
 	mlx_loop(t_init_mlx->mlx);
 }

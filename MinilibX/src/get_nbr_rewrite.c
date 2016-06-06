@@ -6,7 +6,7 @@
 /*   By: abureau <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2016/05/18 16:52:36 by abureau           #+#    #+#             */
-/*   Updated: 2016/05/18 17:42:13 by abureau          ###   ########.fr       */
+/*   Updated: 2016/06/06 20:03:14 by abureau          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -18,11 +18,11 @@ static void		myrealloc(int **dim, int **buffer, int count)
 {
 	*buffer = (int*)ft_memalloc(sizeof(int) * (count));
 	ft_memmove(*buffer, *dim, sizeof(int) * count);
-	*dim = (int*)ft_memalloc(sizeof(int) * (count + 2));
+	*dim = (int*)ft_memalloc(sizeof(int) * (count));
 	ft_memmove(*dim, *buffer, sizeof(int) * count);
 }
 
-static int		*get_dim(const char *ln)
+int				*get_dim(const char *ln)
 {
 	int	*dim;
 	int	*buffer;
@@ -93,7 +93,7 @@ static t_coord	*add_last_coord(t_coord *elem, int zvalue, int yval)
 	return (elem);
 }
 
-static t_coord	*creat_list(t_coord *begin, int *tab_dim, int nbline)
+t_coord			*creat_list(t_coord *begin, int *tab_dim, int nbline)
 {
 	int	index;
 
@@ -104,76 +104,4 @@ static t_coord	*creat_list(t_coord *begin, int *tab_dim, int nbline)
 		index++;
 	}
 	return (begin);
-}
-
-static t_coord	*link_elem(t_coord *begin)
-{
-	t_coord	*elemy;
-	t_coord	*elem;
-	t_coord	*cursor;
-
-	elem = begin;
-	cursor = elem;
-	elemy = elem->nexty;
-	while (cursor->nexty != NULL)
-	{
-		elemy = elem->nexty;
-		while (elem->nextx != NULL && elemy->nextx != NULL)
-		{
-			elem = elem->nextx;
-			elemy = elemy->nextx;
-			elem->nexty = elemy;
-		}
-		cursor = cursor->nexty;
-		elem = cursor;
-	}
-	return (begin);
-}
-
-void	freecoord(t_coord *begin)
-{
-	t_coord	*tmp;
-	t_coord	*cursorx;
-	t_coord *cursory;
-	
-	cursorx = begin;
-	while (cursorx != NULL)
-	{
-		tmp = cursorx;
-		while (tmp->nexty != NULL)
-		{
-			cursory = tmp;
-			tmp = tmp->nexty;
-			cursory->nextx = NULL;
-			cursorx->nexty = NULL;
-			free(cursory);
-		}
-		tmp->nextx = NULL;
-		tmp->nexty = NULL;
-		free(tmp);
-		cursorx = cursorx->nextx;
-	}
-	free(begin);
-	begin = NULL;
-}
-
-t_coord			*get_number(int fd)
-{
-	char	*line;
-	int		nbline;
-	int		*tab_dim;
-	t_coord	*beg_dot;
-
-	beg_dot = NULL;
-	nbline = 1;
-	while (get_next_line(fd, &line) == 1)
-	{
-		if (!parse_number(line))
-			return (NULL);
-		tab_dim = get_dim(ft_strtrim(line));
-		beg_dot = creat_list(beg_dot, tab_dim, nbline - 1);
-		nbline++;
-	}
-	beg_dot = link_elem(beg_dot);
-	return (beg_dot);
 }
