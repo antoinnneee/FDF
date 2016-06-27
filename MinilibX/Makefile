@@ -5,49 +5,54 @@
 #                                                     +:+ +:+         +:+      #
 #    By: abureau <marvin@42.fr>                     +#+  +:+       +#+         #
 #                                                 +#+#+#+#+#+   +#+            #
-#    Created: 2016/05/18 16:20:34 by abureau           #+#    #+#              #
-#    Updated: 2016/06/06 18:04:26 by abureau          ###   ########.fr        #
+#    Created: 2016/06/08 11:20:15 by abureau           #+#    #+#              #
+#    Updated: 2016/06/08 11:20:15 by abureau          ###   ########.fr        #
 #                                                                              #
 #******************************************************************************#
 
 NAME = test_fdf
 
-SRC = ./src/main.c \
-	./src/get_next_line.c \
-	./src/get_nbr_rewrite.c \
-	./src/color.c \
-	./src/initialize.c \
-	./src/line.c \
-	./src/calc.c \
-	./src/addon_getnbr.c\
+SRC = ./src/divert_number.c \
 	./src/divert.c \
-	./src/divert_number.c \
+	./src/color.c \
 	./src/draw_p1.c \
-	./src/draw_p2.c
+	./src/initialize.c \
+	./src/draw_p2.c \
+	./src/main.c \
+	./src/calc.c \
+	./src/addon_getnbr.c \
+	./src/get_next_line.c \
+	./src/line.c \
+	./src/get_nbr_rewrite.c \
+	./src/achievement.c
 
 CC = gcc
 
 OBJ = $(SRC:.c=.o)
 
-CFLAGS = -g -Wall -Wextra -Werror
+CFLAGS = -g -Wall -Wextra
 
+.ONESHELL:
 all: LIBCOMPILE $(NAME)
 
 $(NAME): $(OBJ)
-	$(CC) -o $@ $^ -I libft/includes -L libft/ -lft -L/usr/local/lib/ -I/usr/local/include -lmlx -framework OpenGL -framework AppKit
+	$(CC) -o $@ $^ -I libft/includes -L libft/ -lft -L mlx/ -lmlx -lXext -lX11 -lm -lbsd
 
 LIBCOMPILE:
-	 make -C libft/
+	make -C libft/
+	./mlx/configure
 
 %.o: %.c
-	$(CC) $(CFLAGS) -I libft/includes -o $@ -c $<
+	$(CC) $(CFLAGS) -I libft/includes -I mlx -o $@ -c $<
 
 clean:
 	rm -f $(OBJ)
 	make -C libft/ clean
+	./mlx/configure clean
 
 fclean: clean
 	rm -f $(NAME)
 	make -C libft/ fclean
+	./mlx/configure fclean
 
 re: fclean all

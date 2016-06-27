@@ -34,7 +34,6 @@ void	drawfunc(t_init *t__mlx)
 		cursorx = cursorx->nexty;
 		while (tmp != NULL)
 		{
-			ft_putstrnb("z value :", tmp->z);
 			if (tmp->nextx)
 				drawfcase(tmp, t__mlx);
 			if (tmp->nexty)

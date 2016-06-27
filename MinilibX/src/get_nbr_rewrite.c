@@ -22,33 +22,6 @@ static void		myrealloc(int **dim, int **buffer, int count)
 	ft_memmove(*dim, *buffer, sizeof(int) * count);
 }
 
-int				*get_dim(const char *ln)
-{
-	int	*dim;
-	int	*buffer;
-	int	count;
-	int	cur;
-	int	tmpcursor;
-
-	ft_initthreevar(&count, &cur, &tmpcursor);
-	while (ln[cur] != 0)
-	{
-		if (ft_issignednumber(ln[cur]))
-		{
-			tmpcursor = cur;
-			while (ft_issignednumber(ln[cur]))
-				cur++;
-			count++;
-		}
-		else if (count > 0)
-			myrealloc(&dim, &buffer, count);
-		dim[count] = ft_satoi(ft_strsub(ln, tmpcursor, cur - tmpcursor));
-		cur++;
-	}
-	dim[count + 1] = ft_satoi(ft_strsub(ln, tmpcursor, cur - tmpcursor));
-	dim[0] = count;
-	return (dim);
-}
 
 static t_coord	*creat_dot(int zvalue, t_coord **tmp, t_coord *elem)
 {
@@ -105,3 +78,55 @@ t_coord			*creat_list(t_coord *begin, int *tab_dim, int nbline)
 	}
 	return (begin);
 }
+
+t_coord			*get_dim(t_coord *begin, const char *ln, int numline)
+{
+	int	count;
+	int	cur;
+	int	tmpcursor;
+	static int limit = -42;
+
+	ft_initthreevar(&count, &cur, &tmpcursor);
+	if (limit != -42)
+	{
+		while (ln[cur] != '\0' && count < limit)
+		{
+			if (ft_issignednumber(ln[cur]))
+			{
+				tmpcursor = cur;
+					while (ft_issignednumber(ln[cur]))
+						cur++;
+				count++;
+				begin = add_last_coord(begin, ft_satoi(ft_strsub
+			(ln, tmpcursor, cur - tmpcursor)), numline);
+			}
+			cur++;
+		}
+		if (count > limit)
+			return (NULL);
+	}
+	else
+	{
+		while (ln[cur] != '\0')
+		{
+			if (ft_issignednumber(ln[cur]))
+			{
+				tmpcursor = cur;
+					while (ft_issignednumber(ln[cur]))
+						cur++;
+				count++;
+				begin = add_last_coord(begin, ft_satoi(ft_strsub
+			(ln, tmpcursor, cur - tmpcursor)), numline);
+			}
+			cur++;
+		}
+		limit = count;
+
+	}
+	return (begin);
+}
+
+
+
+
+

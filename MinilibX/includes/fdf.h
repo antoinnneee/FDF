@@ -2,6 +2,7 @@
 # define __FDF_H
 # include "../libft/includes/libft.h"
 # include "./get_next_line.h"
+# include "./achievement.h"
 # include "./get_nbr.h"
 # include <mlx.h>
 
@@ -61,6 +62,7 @@ typedef struct	s_math
 typedef struct	s_init
 {
 	t_coord		*coord;
+	t_ggwin		*acwin;		
 	int			*rangen;
 	int			wid;
 	int			hei;
@@ -82,6 +84,7 @@ typedef struct	s_init
 	float		val4;
 }				t_init;
 
+inline void	blackscreen(t_init *t__mlx);
 void		creat_window(t_init *t_init_mlx);
 void		line_X_y(t_init *t__mlx);
 void		line_X_x(t_init *t__mlx);
@@ -100,8 +103,10 @@ void		drawfunc(t_init *t__mlx);
 void		drawfcase(t_coord *t_dot, t_init *t__mlx);
 void		drawfcase2(t_coord *t_dot, t_init *t__mlx);
 t_coord		*creat_list(t_coord *begin, int *tab_dim, int nb_line);
-int			*get_dim(const char *ln);
+t_coord		*get_dim(t_coord *begin, const char *ln, int numline);
+void		achievement(t_init *t__mlx);
 void		tryalloc(void	*ptr);
+void		print_coord(t_coord *beg);
 int			color_chose(double p);
 int			invertcoord(t_coord *t_dot);
 int			invert2coord(t_coord *t_dot);

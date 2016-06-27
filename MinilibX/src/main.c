@@ -17,7 +17,7 @@
 #include "../includes/fdf.h"
 #include <fcntl.h>
 
-void	blackscreen(t_init *t__mlx)
+inline void	blackscreen(t_init *t__mlx)
 {
 	int	x;
 	int y;
@@ -41,7 +41,6 @@ int		my_key_func(int keycode, void *param)
 	t_init	*tmp;
 
 	tmp = (t_init*)param;
-	blackscreen((t_init*)param);
 	if (keycode == 53 || keycode == 65307)
 		exit(0);
 	if (keycode == 65362 || keycode == 126)
@@ -58,9 +57,12 @@ int		my_key_func(int keycode, void *param)
 		tmp->mod = tmp->mod - 0.5;
 	tmp->an = (keycode == 35 || keycode == 111) ? tmp->an + 1 : tmp->an;
 	tmp->an = (keycode == 31 || keycode == 112) ? tmp->an - 1 : tmp->an;
+	tmp->acwin[4].isobtain = ((tmp->acwin[4].isobtain == 0 && (keycode == 34 || keycode == 20 || keycode == 39 || keycode == 21))) ? 1: tmp->acwin[4].isobtain;
+	tmp->acwin[3].isobtain = ((tmp->acwin[3].isobtain == 0 && (keycode == 35 || keycode == 111 || keycode == 31 || keycode == 112))) ? 1: tmp->acwin[3].isobtain;
 	tmp->hpadd = (keycode == 123) ? tmp->hpadd - 40 : tmp->hpadd;
 	tmp->hpadd = (keycode == 124) ? tmp->hpadd + 40 : tmp->hpadd;
-	creat_window(tmp);
+//	blackscreen((t_init*)param);
+	achievement(tmp);
 	return (0);
 }
 

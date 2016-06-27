@@ -50,7 +50,7 @@ void	print_map_number(t_map *array)
 	}
 }
 
-int		parse_number(char *line)
+int		parse_letter(char *line)
 {
 	int	i;
 	int state;

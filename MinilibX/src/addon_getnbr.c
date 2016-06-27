@@ -73,15 +73,46 @@ t_coord			*get_number(int fd)
 	t_coord	*beg_dot;
 
 	beg_dot = NULL;
-	nbline = 1;
+	nbline = 0;
 	while (get_next_line(fd, &line) == 1)
 	{
-		if (!parse_number(line))
-			return (NULL);
-		tab_dim = get_dim(ft_strtrim(line));
-		beg_dot = creat_list(beg_dot, tab_dim, nbline - 1);
+//		if (!parse_number(line))
+//			return (NULL);
+		beg_dot = get_dim(beg_dot, ft_strtrim(line), nbline);
 		nbline++;
+	ft_putendl(line);
 	}
 	beg_dot = link_elem(beg_dot);
+	print_coord(beg_dot);
 	return (beg_dot);
 }
+
+void		print_coord(t_coord *beg)
+{
+	t_coord	*tmp;
+	t_coord	*tmpaient;
+	int		x;
+	int		y;
+
+	tmp = beg;
+	tmpaient = beg;
+	x = 0;
+	y = 0;
+	if (!beg)
+		return (NULL);
+	while (tmpaient != NULL)
+	{
+		ft_putstr("- x : ");ft_putnbr(x);ft_putstr(", y : ");ft_putnbr(y);ft_putstr(", z : ");ft_putnbr(tmp->z);ft_putchar('\n');
+		x++;
+		tmp = tmp->nextx;
+		if (tmp == NULL)
+		{
+			tmp = tmpaient->nexty;
+			tmpaient = tmp;
+			y++;
+			x = 0;
+		}
+	}
+}
+
+
